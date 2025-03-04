@@ -1,6 +1,6 @@
 use memmap2::Mmap;
 
-use crate::rolling_xxhash::RollingXXHash;
+use crate::{patch::PatchFile, rolling_xxhash::RollingXXHash};
 use std::{
     collections::{HashMap, HashSet},
     fs::{File, metadata},
@@ -92,4 +92,22 @@ pub fn auto_detect_window_size(filename: &str) -> usize {
     );
 
     window_size
+}
+
+pub fn compute_diff_and_save(
+    file_a: &str,
+    file_b: &str,
+    patch_file: &str,
+    window_size: usize,
+) -> std::io::Result<()> {
+    let diff = compute_diff(file_a, file_b, window_size)?;
+    let patch = PatchFile {
+        added: diff.added,
+        removed: diff.removed,
+    };
+
+    patch.save_to_file(patch_file)?;
+    println!("saved patch to {}", patch_file);
+
+    Ok(())
 }

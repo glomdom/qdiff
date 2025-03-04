@@ -7,3 +7,4 @@ edition = "2024"
 memmap2 = "0.9.5"
 rayon = "1.10.0"
 xxhash-rust = { version = "0.8.15", features = ["xxh64"] }
+zstd = "0.13.3"
